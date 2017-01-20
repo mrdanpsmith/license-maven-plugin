@@ -759,9 +759,15 @@ public class DefaultThirdPartyTool
         {
             getLogger().debug( "Unable to locate third party files descriptor : " + e );
 
+            Artifact artifact = (e.getArtifact() != null) ?
+                    e.getArtifact() :
+                    artifactFactory.createArtifactWithClassifier(
+                                project.getGroupId(), project.getArtifactId(), project.getVersion(),
+                                DESCRIPTOR_TYPE, DESCRIPTOR_CLASSIFIER );
+
             // we can afford to write an empty descriptor here as we don't expect it to turn up later in the remote
             // repository, because the parent was already released (and snapshots are updated automatically if changed)
-            result = new File( localRepository.getBasedir(), localRepository.pathOf( e.getArtifact() ) );
+            result = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
 
             FileUtil.createNewFile( result );
         }
